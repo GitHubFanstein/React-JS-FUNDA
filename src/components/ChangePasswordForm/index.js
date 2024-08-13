@@ -1,57 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './FormChangePassword.css';
 
 const ChangePasswordForm = () => {
-
-  // state untuk menyimpan nilai nilai input
     const [recentPass, setRecentPass] = useState('');
     const [newPass, setNewPass] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [guid, setGuid] = useState('');
 
-    const handleSubmit = async (e) => {
+    // Function to extract GUID from the URL
+    useEffect(() => {
+        const url = window.location.href;
+        const extractedGuid = url.substring(url.lastIndexOf('/') + 1);
+        setGuid(extractedGuid);
+    }, []);
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-        // Kunyuk
 
-        // cek kalau si newPass itu harus match sama si confirmPass
         if (newPass !== confirmPass) {
             setError('New password and confirmation do not match.');
             return;
         }
 
-        try {
-          
-          // Mengirim request ke API untuk mengubah password
-            const response = await fetch('http://localhost:8080/api/account/password/change/${guid}', {
-              
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+          // Log the request payload and GUID
+            console.log('Request Payload:', JSON.stringify({ recentPass, newPass }));
+            console.log('GUID:', guid);
 
-                // Mengirim data dalam format JSON
-                body: JSON.stringify({ recentPass, newPass }),
-            });
-
-            const result = await response.json();
-
-            // Jika berhasil 
+        fetch(`http://localhost:8080/api/account/password/change/${guid}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'recentPass': recentPass,  // Add these as headers
+                'newPass': newPass,        // Add these as headers
+                'confirmPass': confirmPass // Add these as headers
+            },
+            body: JSON.stringify({ recentPass, newPass }),
+            
+        })
+        .then(response => response.json().then(result => ({ result, response })))
+        .then(({ result, response }) => {
             if (response.ok) {
                 setSuccess('Password changed successfully.');
                 setError('');
-            }
-            // Jika gagal
-            else {
+            } else {
                 setError(result.message || 'Error changing password.');
                 setSuccess('');
             }
-        } 
-        // tampilin error jika penyebabnya gagal request
-        catch (err) {
+        })
+        .catch(() => {
             setError('Failed to change password. Please try again later.');
             setSuccess('');
-        }
+        });
     };
 
     return (
@@ -106,7 +107,7 @@ const ChangePasswordForm = () => {
                 </div>
 
                 <div className="d-grid">
-                    <button type="submit" className="btn btn-danger" >
+                    <button type="submit" className="btn btn-danger">
                         Change Password
                     </button>
                 </div>

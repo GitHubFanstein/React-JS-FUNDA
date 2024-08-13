@@ -1,7 +1,7 @@
 // import logo from './logo.svg';
 import './App.css';
-import EmailForm from './components/SendEmail/FormEmailChangePassword';
-import ChangePasswordForm from './components/ChangePasswordForm/FormChangePassword';
+import EmailForm from './components/SendEmail';
+import ChangePasswordForm from './components/ChangePasswordForm';
 
 function App() {
   return (
