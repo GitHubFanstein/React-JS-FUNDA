@@ -12,6 +12,7 @@ const ChangePasswordForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // Kunyuk
 
         // cek kalau si newPass itu harus match sama si confirmPass
         if (newPass !== confirmPass) {
@@ -105,7 +106,7 @@ const ChangePasswordForm = () => {
                 </div>
 
                 <div className="d-grid">
-                    <button type="submit" className="btn btn-danger">
+                    <button type="submit" className="btn btn-danger" >
                         Change Password
                     </button>
                 </div>
