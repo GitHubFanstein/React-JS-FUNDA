@@ -24,8 +24,8 @@ const ChangePasswordForm = () => {
             return;
         }
 
-          // Log the request payload and GUID
-            console.log('Request Payload:', JSON.stringify({ recentPass, newPass }));
+          // log cek recent pass, new pass dan guid 
+            console.log('Request:', JSON.stringify({ recentPass, newPass }));
             console.log('GUID:', guid);
 
         fetch(`http://localhost:8080/api/account/password/change/${guid}`, {
